@@ -41,34 +41,35 @@ app.get("/", async (req, res) => {
 });
 
 // Helper to fetch ISBN from Open Library
-async function fetchISBN(title, author) {
+// Modified helper to fetch both ISBN and cover_edition_key
+async function fetchBookIdentifiers(title, author) {
     try {
         const queries = [
             `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`,
             `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}`
         ];
-        console.log(queries);
+
         for (const url of queries) {
             const response = await axios.get(url);
             const docs = response.data.docs;
 
             for (const doc of docs) {
-                if (doc.isbn && doc.isbn.length > 0) {
-                    const validISBN = doc.isbn.find(isbn => isbn.length === 13) || doc.isbn.find(isbn => isbn.length === 10);
-                    if (validISBN) {
-                        console.log(`✅ Found ISBN ${validISBN} for "${title}"`);
-                        return validISBN;
-                    }
+                const validISBN = doc.isbn?.find(isbn => isbn.length === 13) || doc.isbn?.find(isbn => isbn.length === 10);
+                const coverEditionKey = doc.cover_edition_key || null;
+
+                if (validISBN || coverEditionKey) {
+                    console.log(`✅ Found identifiers for "${title}": ISBN=${validISBN}, OLID=${coverEditionKey}`);
+                    return { isbn: validISBN || null, cover_edition_key: coverEditionKey };
                 }
             }
         }
 
-        console.warn(`⚠️ No valid ISBN found for "${title}" (with or without author).`);
+        console.warn(`⚠️ No valid identifiers found for "${title}".`);
     } catch (error) {
-        console.error("❌ Error fetching ISBN from Open Library:", error.message);
+        console.error("❌ Error fetching identifiers:", error.message);
     }
 
-    return null;
+    return { isbn: null, cover_edition_key: null };
 }
 
 
@@ -76,19 +77,21 @@ async function fetchISBN(title, author) {
 
 
 // Add book route with ISBN fetch if missing
+
 app.post("/add", async (req, res) => {
     let { title, author, isbn, rating, notes } = req.body;
+    let cover_edition_key = null;
 
-    if (!isbn) {
-        isbn = await fetchISBN(title, author);
-        console.log(`Fetched ISBN for "${title}": ${isbn}`);
+    if (!isbn || isbn.trim() === "") {
+        const result = await fetchBookIdentifiers(title, author);
+        isbn = result.isbn;
+        cover_edition_key = result.cover_edition_key;
     }
-
 
     try {
         await pool.query(
-            "INSERT INTO books (title, author, isbn, rating, notes) VALUES ($1, $2, $3, $4, $5)",
-            [title, author, isbn || '', rating || null, notes]
+            "INSERT INTO books (title, author, isbn, cover_edition_key, rating, notes) VALUES ($1, $2, $3, $4, $5, $6)",
+            [title, author, isbn || '', cover_edition_key || '', rating || null, notes]
         );
         res.redirect("/");
     } catch (err) {

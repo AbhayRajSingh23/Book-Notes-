@@ -19,24 +19,27 @@
     <h2>Books Read</h2>
     <ul class="book-list">
       <% books.forEach(book => { %>
-        <li class="book-card">
-          <% if (book.isbn && book.isbn.trim() !== "") { %>
-            <img class="cover" src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" alt="Book Cover for <%= book.title %>" />
-          <% } else { %>
-            <div class="no-cover">No Cover</div>
-          <% } %>
+  <li class="book-card">
+    <% if (book.isbn && book.isbn.trim() !== "") { %>
+      <img class="cover" src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" alt="Book Cover for <%= book.title %>" />
+    <% } else if (book.cover_edition_key && book.cover_edition_key.trim() !== "") { %>
+      <img class="cover" src="https://covers.openlibrary.org/b/olid/<%= book.cover_edition_key %>-M.jpg" alt="Book Cover for <%= book.title %>" />
+    <% } else { %>
+      <div class="no-cover">No Cover</div>
+    <% } %>
 
-          <div class="book-info">
-            <h3><%= book.title %></h3>
-            <p><em>by <%= book.author %></em></p>
-            <% if (book.rating) { %><p>Rating: <%= book.rating %>/5</p><% } %>
-            <% if (book.notes) { %><p><%= book.notes %></p><% } %>
-            <form action="/delete/<%= book.id %>" method="POST">
-              <button type="submit">Delete</button>
-            </form>
-          </div>
-        </li>
-      <% }) %>
+    <div class="book-info">
+      <h3><%= book.title %></h3>
+      <p><em>by <%= book.author %></em></p>
+      <% if (book.rating) { %><p>Rating: <%= book.rating %>/5</p><% } %>
+      <% if (book.notes) { %><p><%= book.notes %></p><% } %>
+      <form action="/delete/<%= book.id %>" method="POST">
+        <button type="submit">Delete</button>
+      </form>
+    </div>
+  </li>
+<% }) %>
+
     </ul>
   </main>
 
