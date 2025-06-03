@@ -5,6 +5,7 @@ import bodyParser from "body-parser";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import axios from "axios";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -38,9 +39,30 @@ app.get("/", async (req, res) => {
   }
 });
 
-// Add book
+// Helper to fetch ISBN from Open Library
+async function fetchISBN(title, author) {
+  try {
+    const query = `https://openlibrary.org/search.json?title=${encodeURIComponent(title)}&author=${encodeURIComponent(author)}`;
+    const response = await axios.get(query);
+    const docs = response.data.docs;
+
+    if (docs.length > 0 && docs[0].isbn) {
+      return docs[0].isbn[0]; // Return the first ISBN
+    }
+  } catch (error) {
+    console.error("Error fetching ISBN from Open Library:", error.message);
+  }
+  return null;
+}
+
+// Add book route with ISBN fetch if missing
 app.post("/add", async (req, res) => {
-  const { title, author, isbn, rating, notes } = req.body;
+  let { title, author, isbn, rating, notes } = req.body;
+
+  if (!isbn) {
+    isbn = await fetchISBN(title, author);
+  }
+
   try {
     await pool.query(
       "INSERT INTO books (title, author, isbn, rating, notes) VALUES ($1, $2, $3, $4, $5)",
