@@ -6,29 +6,40 @@
 <body>
   <main>
     <h1>My Book Notes</h1>
+
     <form action="/add" method="POST">
       <input type="text" name="title" placeholder="Book Title" required>
       <input type="text" name="author" placeholder="Author" required>
-      <input type="number" name="rating" min="1" max="5" placeholder="Rating">
+      <input type="text" name="isbn" placeholder="ISBN (optional)">
+      <input type="number" name="rating" min="1" max="5" placeholder="Rating (1–5)">
       <textarea name="notes" placeholder="Notes about the book"></textarea>
       <button type="submit">Add Book</button>
     </form>
 
     <h2>Books Read</h2>
-    <ul>
+    <ul class="book-list">
       <% books.forEach(book => { %>
-        <li>
-          <img src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" alt="Book Cover" />
-          <strong><%= book.title %></strong> by <%= book.author %>
-          <p>Rating: <%= book.rating %>/5</p>
-          <p><%= book.notes %></p>
-          <form action="/delete/<%= book.id %>" method="POST" style="display:inline;">
-            <button type="submit">Delete</button>
-          </form>
+        <li class="book-card">
+          <% if (book.isbn && book.isbn.trim() !== "") { %>
+            <img class="cover" src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg" alt="Book Cover for <%= book.title %>" />
+          <% } else { %>
+            <div class="no-cover">No Cover</div>
+          <% } %>
+
+          <div class="book-info">
+            <h3><%= book.title %></h3>
+            <p><em>by <%= book.author %></em></p>
+            <% if (book.rating) { %><p>Rating: <%= book.rating %>/5</p><% } %>
+            <% if (book.notes) { %><p><%= book.notes %></p><% } %>
+            <form action="/delete/<%= book.id %>" method="POST">
+              <button type="submit">Delete</button>
+            </form>
+          </div>
         </li>
       <% }) %>
     </ul>
   </main>
+
   <%- include('partials/footer') %>
 </body>
 </html>
