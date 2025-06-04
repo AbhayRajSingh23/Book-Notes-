@@ -100,3 +100,20 @@ button:hover {
   font-size: 0.95rem;
   color: #4e4e4e;
 }
+
+.book-title-button {
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: inherit;
+  background: none;
+  border: none;
+  color: #3e3e3e;
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+}
+
+.book-title-button:hover {
+  text-decoration: none;
+}

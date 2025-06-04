@@ -118,6 +118,25 @@ app.use((err, req, res, next) => {
     res.status(500).send("Something broke!");
 });
 
+    app.post("/book", (req, res) => {
+    const { isbn, olid } = req.body;
+
+    let url = null;
+
+    if (olid) {
+        url = `https://openlibrary.org/books/${olid}`;
+    } else if (isbn) {
+        url = `https://openlibrary.org/isbn/${isbn}`;
+    }
+
+    if (url) {
+        res.redirect(url);
+    } else {
+        res.status(400).send("Missing identifier to look up the book.");
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
