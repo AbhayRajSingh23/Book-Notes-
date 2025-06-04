@@ -64,17 +64,19 @@ button:hover {
   padding: 1rem;
   border-radius: 10px;
   border: 1px solid #e5dcd4;
+  flex-wrap: wrap;
 }
 
-.cover {
+.cover,
+.no-cover {
   width: 90px;
   height: auto;
   border-radius: 4px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06);
+  flex-shrink: 0;
 }
 
 .no-cover {
-  width: 90px;
   height: 135px;
   background-color: #dcd0c0;
   display: flex;
@@ -82,16 +84,18 @@ button:hover {
   justify-content: center;
   font-size: 0.8rem;
   color: #555;
-  border-radius: 4px;
 }
 
 .book-info {
   flex: 1;
+  min-width: 0;
 }
 
-.book-info h3 {
+.book-info h3,
+.book-title-button {
   margin: 0 0 0.5rem;
   font-size: 1.2rem;
+  font-weight: bold;
   color: #3e3e3e;
 }
 
@@ -101,19 +105,85 @@ button:hover {
   color: #4e4e4e;
 }
 
+/* Styled Title as Button */
 .book-title-button {
-  font-size: 1.5rem;
-  font-weight: bold;
   font-family: inherit;
   background: none;
   border: none;
-  color: #3e3e3e;
   text-decoration: underline;
   cursor: pointer;
   padding: 0;
-  margin: 0;
+  font-size: 1.2rem;
+  text-align: left;
 }
 
 .book-title-button:hover {
   text-decoration: none;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  .book-card {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .cover,
+  .no-cover {
+    width: 100%;
+    height: auto;
+    max-width: 160px;
+    margin-bottom: 1rem;
+  }
+
+  .book-info {
+    width: 100%;
+  }
+
+  .book-info p,
+  .book-title-button {
+    font-size: 1rem;
+  }
+
+  button {
+    width: 100%;
+    padding: 0.75rem;
+  }
+}
+
+header {
+  background-color: #a97155;
+  color: white;
+  padding: 1rem 2rem;
+  text-align: center;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+@media (max-width: 600px) {
+  header {
+    padding: 1rem;
+  }
+
+  header h1 {
+    font-size: 1.5rem;
+  }
+}
+footer {
+  text-align: center;
+  margin-top: 2rem;
+  font-size: 0.9rem;
+  color: #6c6c6c;
 }
