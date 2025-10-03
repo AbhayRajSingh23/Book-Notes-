@@ -171,3 +171,21 @@ The application is fully responsive with:
 ### 📞 Support
 
 If you encounter any issues or have questions, please [open an issue](https://github.com/AbhayRajSingh23/Book-Notes-/issues) on GitHub.
+
+## Deployment (Vercel)
+
+1. Ensure you have a PostgreSQL instance reachable from Vercel (e.g., Neon, Supabase, Render, RDS). Copy its credentials.
+2. In Vercel Project Settings → Environment Variables, set:
+   - `PORT` = `3000` (optional)
+   - `SESSION_SECRET` = a strong secret
+   - `PGUSER`, `PGHOST`, `PGDATABASE`, `PGPASSWORD`, `PGPORT`
+   - `SESSION_TABLE` = `session` (or your custom table name)
+   - `SESSION_SECURE_COOKIES` = `1` in production
+3. Push to GitHub and import the repo into Vercel. Vercel will use `api/index.js` as the serverless entrypoint per `vercel.json`.
+4. Static assets in `public/` and EJS views in `views/` are served by the Express app.
+
+Local dev:
+```bash
+npm install
+npm start
+```
