@@ -5,11 +5,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Book Notes</title>
-  <link rel="stylesheet" href="/style.css">
-  <%- include('partials/header') %>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+  <!-- Include Header -->
+  <%- include('partials/header') %>
+
   <main>
     <h1>My Book Notes</h1>
 
@@ -30,31 +32,31 @@
     </form>
 
     <!-- Search & Filter Form -->
-<form method="GET" action="/" class="search-filter-form">
-  <input type="text" name="search" placeholder="Search by title or author" value="<%= query.search || '' %>">
+    <form method="GET" action="/" class="search-filter-form">
+      <input type="text" name="search" placeholder="Search by title or author" value="<%= query.search || '' %>">
 
-  <select name="status">
-    <option value="">All Statuses</option>
-    <option value="Want to Read" <%= query.status === 'Want to Read' ? 'selected' : '' %>>Want to Read</option>
-    <option value="Reading" <%= query.status === 'Reading' ? 'selected' : '' %>>Reading</option>
-    <option value="Completed" <%= query.status === 'Completed' ? 'selected' : '' %>>Completed</option>
-  </select>
+      <select name="status">
+        <option value="">All Statuses</option>
+        <option value="Want to Read" <%= query.status === 'Want to Read' ? 'selected' : '' %>>Want to Read</option>
+        <option value="Reading" <%= query.status === 'Reading' ? 'selected' : '' %>>Reading</option>
+        <option value="Completed" <%= query.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+      </select>
 
-  <select name="rating">
-    <option value="">All Ratings</option>
-    <% for(let i=1; i<=5; i++){ %>
-      <option value="<%= i %>" <%= query.rating == i ? 'selected' : '' %>><%= i %></option>
-    <% } %>
-  </select>
+      <select name="rating">
+        <option value="">All Ratings</option>
+        <% for(let i=1; i<=5; i++){ %>
+          <option value="<%= i %>" <%= query.rating == i ? 'selected' : '' %>><%= i %></option>
+        <% } %>
+      </select>
 
-  <select name="sort">
-    <option value="latest" <%= query.sort === 'latest' ? 'selected' : '' %>>Latest</option>
-    <option value="oldest" <%= query.sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
-    <option value="highest" <%= query.sort === 'highest' ? 'selected' : '' %>>Highest Rated</option>
-  </select>
+      <select name="sort">
+        <option value="latest" <%= query.sort === 'latest' ? 'selected' : '' %>>Latest</option>
+        <option value="oldest" <%= query.sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
+        <option value="highest" <%= query.sort === 'highest' ? 'selected' : '' %>>Highest Rated</option>
+      </select>
 
-  <button type="submit">Apply</button>
-</form>
+      <button type="submit">Apply</button>
+    </form>
 
     <!-- Books List -->
     <h2>Books</h2>
@@ -126,6 +128,7 @@
     </ul>
   </main>
 
+  <!-- Include Footer -->
   <%- include('partials/footer') %>
 </body>
 
