@@ -69,6 +69,23 @@ body {
   background-color: #8c5a42;
 }
 
+/* Explicit login button class support if needed */
+.login-button {
+  width: 100%;
+  background-color: #a97155;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.6rem 1.2rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.login-button:hover {
+  background-color: #8c5a42;
+}
+
 /* Links */
 .auth-container p {
   margin-top: 1rem;

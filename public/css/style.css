@@ -159,19 +159,16 @@ button:hover {
 header {
   background-color: #a97155;
   color: white;
-  padding: 1rem 2rem;
-  text-align: center;
+  padding: 0.75rem 1rem;
   border-radius: 12px;
   margin-bottom: 2rem;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
 /* Header Title */
-header h1 {
-  margin: 0 0 0.5rem 0;
-  font-size: 2rem;
-  font-weight: 700;
-  letter-spacing: 1px;
+.brand {
+  font-size: 1.25rem;
+  font-weight: 800;
 }
 
 /* Nav styling */
@@ -179,7 +176,6 @@ header nav {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  flex-wrap: wrap;
   gap: 1rem;
 }
 
@@ -194,9 +190,9 @@ header nav a {
   color: #fff;
   text-decoration: none;
   font-weight: 600;
-  padding: 0.5rem 1rem;
+  padding: 0.5rem 0.75rem;
   border-radius: 6px;
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.08);
   transition: background 0.3s ease, color 0.3s ease;
 }
 
@@ -204,6 +200,27 @@ header nav a {
 header nav a:hover {
   background-color: #fff;
   color: #a97155;
+}
+
+.nav-form {
+  display: inline-block;
+}
+
+.nav-button {
+  background-color: #ffffff;
+  color: #a97155;
+  padding: 0.45rem 0.9rem;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+.nav-button:hover {
+  background-color: #f3e7de;
+  color: #8c5a42;
 }
 
 /* Mobile adjustments */
@@ -214,12 +231,12 @@ header nav a:hover {
 
   header nav {
     flex-direction: column;
-    align-items: center;
-    gap: 0.8rem;
+    align-items: stretch;
+    gap: 0.6rem;
   }
 
-  header nav a {
-    padding: 0.6rem 1.2rem;
+  .nav-left, .nav-right {
+    justify-content: space-between;
   }
 }
 
