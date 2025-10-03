@@ -9,6 +9,16 @@ import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
 import { pool } from "./config/database.js";
 
+// Debug environment
+console.log("App starting with NODE_ENV:", process.env.NODE_ENV);
+console.log("Environment variables loaded:", {
+  PGUSER: !!process.env.PGUSER,
+  PGHOST: !!process.env.PGHOST,
+  PGDATABASE: !!process.env.PGDATABASE,
+  PGPASSWORD: !!process.env.PGPASSWORD,
+  SESSION_SECRET: !!process.env.SESSION_SECRET
+});
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 const PgSession = pgSession(session);
