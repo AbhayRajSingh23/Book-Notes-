@@ -7,7 +7,7 @@ import session from "express-session";
 import pgSession from "connect-pg-simple";
 import authRoutes from "./routes/authRoutes.js";
 import bookRoutes from "./routes/bookRoutes.js";
-import { pool } from "./config/db.js";
+import { pool } from "./config/database.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

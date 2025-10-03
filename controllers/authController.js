@@ -1,7 +1,5 @@
 import bcrypt from "bcrypt";
-import session from "express-session";
-import pgSession from "connect-pg-simple";
-import { pool } from "../config/db.js";
+import { pool } from "../config/database.js";
 
 export const renderLogin = (req, res) => res.render("login");
 export const renderSignup = (req, res) => res.render("signup");

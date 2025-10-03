@@ -3,12 +3,15 @@ import pkg from "pg";
 
 const { Pool } = pkg;
 
-export const pool = new Pool({
+// Create pool with environment variables
+const pool = new Pool({
   user: process.env.PGUSER || "postgres",
-  host: process.env.PGHOST || "localhost",
+  host: process.env.PGHOST || "localhost", 
   database: process.env.PGDATABASE || "book_notes",
   password: process.env.PGPASSWORD || "pg123",
   port: Number(process.env.PGPORT) || 5432,
 });
 
-
+// Export pool
+export { pool };
+export default pool;

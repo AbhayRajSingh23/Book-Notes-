@@ -1,4 +1,4 @@
-import { pool } from "../config/db.js";
+import { pool } from "../config/database.js";
 import { fetchBookIdentifiers } from "../utils/openLibrary.js";
 
 export const listBooksPage = async (req, res) => {
