@@ -54,8 +54,21 @@ Before running this application, make sure you have:
 
 3. **Set up PostgreSQL database**
    ```sql
+   -- Create database
    CREATE DATABASE book_notes;
    
+   -- Connect to the database
+   \c book_notes;
+   
+   -- Create users table
+   CREATE TABLE users (
+       id SERIAL PRIMARY KEY,
+       username VARCHAR(50) UNIQUE NOT NULL,
+       password VARCHAR(255) NOT NULL,
+       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   );
+   
+   -- Create books table
    CREATE TABLE books (
        id SERIAL PRIMARY KEY,
        title VARCHAR(255) NOT NULL,
@@ -64,21 +77,47 @@ Before running this application, make sure you have:
        cover_edition_key VARCHAR(50),
        rating INTEGER CHECK (rating >= 1 AND rating <= 5),
        notes TEXT,
+       status VARCHAR(50) DEFAULT 'Want to Read',
+       genre VARCHAR(100),
+       user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    );
+   
+   -- Create session table (for express-session with connect-pg-simple)
+   CREATE TABLE session (
+       sid VARCHAR NOT NULL COLLATE "default",
+       sess JSON NOT NULL,
+       expire TIMESTAMP(6) NOT NULL
+   )
+   WITH (OIDS=FALSE);
+   
+   ALTER TABLE session DROP CONSTRAINT IF EXISTS session_pkey;
+   ALTER TABLE session ADD CONSTRAINT session_pkey PRIMARY KEY (sid) NOT DEFERRABLE INITIALLY IMMEDIATE;
+   
+   CREATE INDEX IF NOT EXISTS "IDX_session_expire" ON session ("expire");
+   
+   -- Create indexes for better performance
+   CREATE INDEX idx_books_user_id ON books(user_id);
+   CREATE INDEX idx_books_created_at ON books(created_at);
+   CREATE INDEX idx_books_status ON books(status);
+   CREATE INDEX idx_books_rating ON books(rating);
    ```
 
-4. **Configure database connection**
+4. **Configure environment variables**
    
-   Update the database configuration in `app.js`:
-   ```javascript
-   const pool = new Pool({
-       user: "your_username",
-       host: "localhost",
-       database: "book_notes",
-       password: "your_password",
-       port: 5432,
-   });
+   Create a `.env` file in the project root:
+   ```env
+   PORT=3001
+   SESSION_SECRET=your_strong_secret_here
+   
+   PGUSER=postgres
+   PGHOST=localhost
+   PGDATABASE=book_notes
+   PGPASSWORD=your_password
+   PGPORT=5432
+   
+   SESSION_TABLE=session
+   SESSION_SECURE_COOKIES=
    ```
 
 5. **Start the application**
@@ -88,7 +127,7 @@ Before running this application, make sure you have:
 
 6. **Access the application**
    
-   Open your browser and navigate to `http://localhost:3000`
+   Open your browser and navigate to `http://localhost:3001`
 
 ## 💡 Usage
 
@@ -135,7 +174,7 @@ The application is fully responsive with:
 
 ## 🚀 Future Enhancements
 
-- [ ] User authentication and multiple user support
+- [x] User authentication and multiple user support
 - [ ] Book search functionality within the app
 - [ ] Export/import book lists
 - [ ] Reading progress tracking
