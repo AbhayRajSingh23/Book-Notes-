@@ -21,18 +21,31 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 
 // Session setup
+// app.use(
+//   session({
+//     store: new PgSession({ pool, tableName: process.env.SESSION_TABLE || "session" }),
+//     secret: process.env.SESSION_SECRET || "supersecret",
+//     resave: false,
+//     saveUninitialized: false,
+//     cookie: {
+//       maxAge: 30 * 24 * 60 * 60 * 1000,
+//       sameSite: "lax",
+//       secure: !!process.env.SESSION_SECURE_COOKIES,
+//       httpOnly: true,
+//       path: "/",
+//     },
+//   })
+// );
 app.use(
   session({
-    store: new PgSession({ pool, tableName: process.env.SESSION_TABLE || "session" }),
-    secret: process.env.SESSION_SECRET || "supersecret",
+    store: new PgSession({ pool, tableName: "session" }),
+    secret: process.env.SESSION_SECRET || "dev-secret",
     resave: false,
     saveUninitialized: false,
     cookie: {
       maxAge: 30 * 24 * 60 * 60 * 1000,
-      sameSite: "lax",
-      secure: !!process.env.SESSION_SECURE_COOKIES,
-      httpOnly: true,
-      path: "/",
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "none" : "lax",
     },
   })
 );
