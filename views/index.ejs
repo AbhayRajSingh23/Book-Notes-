@@ -2,6 +2,10 @@
 <html lang="en">
 
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Notes</title>
+  <link rel="stylesheet" href="/style.css">
   <%- include('partials/header') %>
 </head>
 
@@ -9,76 +13,116 @@
   <main>
     <h1>My Book Notes</h1>
 
+    <!-- Add Book Form -->
     <form action="/add" method="POST">
       <input type="text" name="title" placeholder="Book Title" required>
       <input type="text" name="author" placeholder="Author" required>
       <input type="text" name="isbn" placeholder="ISBN (optional)">
       <input type="number" name="rating" min="1" max="5" placeholder="Rating (1–5)">
-      <textarea name="notes" placeholder="Notes about the book"></textarea>
+      <select name="status">
+        <option value="Want to Read">Want to Read</option>
+        <option value="Reading">Reading</option>
+        <option value="Completed">Completed</option>
+      </select>
+      <input type="text" name="genre" placeholder="Genre (optional)">
+      <textarea name="notes" placeholder="Initial Note (optional)"></textarea>
       <button type="submit">Add Book</button>
     </form>
 
-    <h2>Books Read</h2>
+    <!-- Search & Filter Form -->
+<form method="GET" action="/" class="search-filter-form">
+  <input type="text" name="search" placeholder="Search by title or author" value="<%= query.search || '' %>">
+
+  <select name="status">
+    <option value="">All Statuses</option>
+    <option value="Want to Read" <%= query.status === 'Want to Read' ? 'selected' : '' %>>Want to Read</option>
+    <option value="Reading" <%= query.status === 'Reading' ? 'selected' : '' %>>Reading</option>
+    <option value="Completed" <%= query.status === 'Completed' ? 'selected' : '' %>>Completed</option>
+  </select>
+
+  <select name="rating">
+    <option value="">All Ratings</option>
+    <% for(let i=1; i<=5; i++){ %>
+      <option value="<%= i %>" <%= query.rating == i ? 'selected' : '' %>><%= i %></option>
+    <% } %>
+  </select>
+
+  <select name="sort">
+    <option value="latest" <%= query.sort === 'latest' ? 'selected' : '' %>>Latest</option>
+    <option value="oldest" <%= query.sort === 'oldest' ? 'selected' : '' %>>Oldest</option>
+    <option value="highest" <%= query.sort === 'highest' ? 'selected' : '' %>>Highest Rated</option>
+  </select>
+
+  <button type="submit">Apply</button>
+</form>
+
+    <!-- Books List -->
+    <h2>Books</h2>
     <ul class="book-list">
-      <% books.forEach(book=> { %>
+      <% books.forEach(book => { %>
         <li class="book-card">
+
+          <!-- Book Cover -->
           <% if (book.cover_edition_key) { %>
             <form action="/book" method="POST" target="_blank">
               <input type="hidden" name="olid" value="<%= book.cover_edition_key %>">
-              <button type="submit" style="border: none; background: none; padding: 0;">
+              <button type="submit" style="border:none; background:none; padding:0;">
                 <img class="cover" src="https://covers.openlibrary.org/b/olid/<%= book.cover_edition_key %>-M.jpg"
                   alt="Cover for <%= book.title %>">
               </button>
             </form>
-            <% } else if (book.isbn && book.isbn.trim() !=="" ) { %>
-              <form action="/book" method="POST" target="_blank">
-                <input type="hidden" name="isbn" value="<%= book.isbn %>">
-                <button type="submit" style="border: none; background: none; padding: 0;">
-                  <img class="cover" src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg"
-                    alt="Cover for <%= book.title %>">
-                </button>
-              </form>
+          <% } else if (book.isbn && book.isbn.trim() !== "") { %>
+            <form action="/book" method="POST" target="_blank">
+              <input type="hidden" name="isbn" value="<%= book.isbn %>">
+              <button type="submit" style="border:none; background:none; padding:0;">
+                <img class="cover" src="https://covers.openlibrary.org/b/isbn/<%= book.isbn %>-M.jpg"
+                  alt="Cover for <%= book.title %>">
+              </button>
+            </form>
+          <% } else { %>
+            <div class="no-cover">No Cover</div>
+          <% } %>
+
+          <!-- Book Info -->
+          <div class="book-info">
+            <h3>
+              <% if (book.cover_edition_key || book.isbn) { %>
+                <form action="/book" method="POST" target="_blank" style="display:inline;">
+                  <% if (book.cover_edition_key) { %>
+                    <input type="hidden" name="olid" value="<%= book.cover_edition_key %>">
+                  <% } else if (book.isbn) { %>
+                    <input type="hidden" name="isbn" value="<%= book.isbn %>">
+                  <% } %>
+                  <button type="submit" class="book-title-button"><%= book.title %></button>
+                </form>
               <% } else { %>
-                <div class="no-cover">No Cover</div>
-                <% } %>
+                <%= book.title %>
+              <% } %>
+            </h3>
+            <p><em>by <%= book.author %></em></p>
+            <% if (book.rating) { %>
+              <p>Rating: <%= book.rating %>/5</p>
+            <% } %>
+            <% if (book.status) { %>
+              <p>Status: <%= book.status %></p>
+            <% } %>
+            <% if (book.genre) { %>
+              <p>Genre: <%= book.genre %></p>
+            <% } %>
 
+            <!-- Notes -->
+            <% if (book.note_content) { %>
+              <p><strong>Note:</strong> <%= book.note_content %></p>
+            <% } %>
 
-                  <div class="book-info">
-                    <h3>
-                      <% if (book.cover_edition_key || book.isbn) { %>
-                        <form action="/book" method="POST" target="_blank" style="display: inline;">
-                          <% if (book.cover_edition_key) { %>
-                            <input type="hidden" name="olid" value="<%= book.cover_edition_key %>">
-                            <% } else if (book.isbn) { %>
-                              <input type="hidden" name="isbn" value="<%= book.isbn %>">
-                              <% } %>
-                                <button type="submit" class="book-title-button">
-                                  <%= book.title %>
-                                </button>
-                        </form>
-                        <% } else { %>
-                          <h3>
-                            <%= book.title %>
-                          </h3>
-                          <% } %>
+            <!-- Delete Book -->
+            <form action="/delete/<%= book.id %>" method="POST">
+              <button type="submit">Delete</button>
+            </form>
+          </div>
 
-                    </h3>
-                    <p><em>by <%= book.author %></em></p>
-                    <% if (book.rating) { %>
-                      <p>Rating: <%= book.rating %>/5</p>
-                      <% } %>
-                        <% if (book.notes) { %>
-                          <p>
-                            <%= book.notes %>
-                          </p>
-                          <% } %>
-                            <form action="/delete/<%= book.id %>" method="POST">
-                              <button type="submit">Delete</button>
-                            </form>
-                  </div>
         </li>
-        <% }) %>
-
+      <% }) %>
     </ul>
   </main>
 

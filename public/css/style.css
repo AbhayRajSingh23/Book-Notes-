@@ -155,6 +155,8 @@ button:hover {
   }
 }
 
+/* Header Navigation */
+/* Header Navigation Container */
 header {
   background-color: #a97155;
   color: white;
@@ -165,6 +167,7 @@ header {
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 
+/* Header Title */
 header h1 {
   margin: 0;
   font-size: 2rem;
@@ -172,6 +175,33 @@ header h1 {
   letter-spacing: 1px;
 }
 
+/* Nav styling */
+header nav {
+  margin-top: 1rem;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+/* Nav links as buttons */
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+/* Hover effect for nav links */
+header nav a:hover {
+  background-color: #fff;
+  color: #a97155;
+}
+
+/* Mobile adjustments */
 @media (max-width: 600px) {
   header {
     padding: 1rem;
@@ -180,7 +210,17 @@ header h1 {
   header h1 {
     font-size: 1.5rem;
   }
+
+  header nav {
+    flex-direction: column;
+    gap: 0.8rem;
+  }
+
+  header nav a {
+    padding: 0.6rem 1.2rem;
+  }
 }
+
 footer {
   text-align: center;
   margin-top: 2rem;
