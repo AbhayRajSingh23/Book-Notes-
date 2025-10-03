@@ -4,11 +4,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-  "test": "echo \"Error: no test specified\" && exit 1",
-  "start": "node api/index.js",
-  "build": "echo \"No build step required\""
-}
-
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node api/index.js",
+    "build": "echo \"No build step required\""
   },
   "keywords": [],
   "author": "",
