@@ -1,6 +1,7 @@
 import bcrypt from "bcrypt";
 import { pool } from "../config/database.js";
 
+
 export const renderLogin = (req, res) => res.render("login");
 export const renderSignup = (req, res) => res.render("signup");
 
